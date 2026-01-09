@@ -1,5 +1,7 @@
 package com.nameismani.spring_boot_learning.service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 // import com.nameismani.spring_boot_learning.entity.User;
@@ -11,8 +13,11 @@ import java.util.List;
 
 @Service  
 public class UserService {
-     @Autowired
-    private UserRepository userRepository;
+    @Autowired
+    private  UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Get all users
     // public List<User> getAllUsers() {
@@ -23,6 +28,7 @@ public class UserService {
     // Save a user
     // public User saveUser(User user) {
     public UserEntity saveUser(UserEntity user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -36,7 +42,6 @@ public class UserService {
     public UserEntity updateUserById(Long  id,UserEntity user) {
         // return userRepository.findById(id).orElse(null); // Return null if not found
       UserEntity userData = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User Not Found with this id" +" "+ id)); // Return Not found message
-    // Update only fields that are not null
     if (user.getName() != null) {
         userData.setName(user.getName());
     }
@@ -51,7 +56,9 @@ public class UserService {
 
     // Delete a user by ID
     // public void deleteUser(String id) {
-    public void deleteUser(Long  id) {
-        userRepository.deleteById(id);
+    public ResponseEntity<?> deleteUser(Long  id) {
+         UserEntity userData = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User Not Found with this id" +" "+ id));
+        userRepository.delete(userData);
+        return ResponseEntity.ok().build();
     }
 }

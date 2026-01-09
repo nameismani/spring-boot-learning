@@ -3,6 +3,7 @@ package com.nameismani.spring_boot_learning.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,7 +49,7 @@ public class UserController {
 
     // Delete a user by ID
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+       return userService.deleteUser(id);
     }
 }
