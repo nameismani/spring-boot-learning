@@ -1,9 +1,10 @@
 package com.nameismani.spring_boot_learning.service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
 // import com.nameismani.spring_boot_learning.entity.User;
 import com.nameismani.spring_boot_learning.entity.UserEntity;
 import com.nameismani.spring_boot_learning.exceptions.ResourceNotFoundException;
@@ -27,10 +28,9 @@ public class UserService {
 
     // Get all users
     // public List<User> getAllUsers() {
-    public List<UserEntity> getAllUsers() {
-        return userRepository.findAll();
+     public Page<UserEntity> getAllUsers(int page, int size) {
+        return userRepository.findAll(PageRequest.of(page, size));
     }
-
     // Save a user
     // public User saveUser(User user) {
     public UserEntity saveUser(UserEntity user) {

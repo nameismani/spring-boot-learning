@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.data.domain.Page;
 import com.nameismani.spring_boot_learning.entity.User;
 import com.nameismani.spring_boot_learning.entity.UserEntity;
 import com.nameismani.spring_boot_learning.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,11 +27,26 @@ public class UserController {
     private UserService userService;
 
  // Get all users
-    @GetMapping
     // public List<User> getAllUsers(){
-    public List<UserEntity> getAllUsers(){
-             return userService.getAllUsers();
-    }    
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getAllUsers(
+        HttpServletRequest request,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+         UserEntity currentUser = (UserEntity) request.getAttribute("currentUser");
+         System.out.print(currentUser.getName() + " sfdasfd User") ;
+        Page<UserEntity> userPage = userService.getAllUsers((page -1), size);
+        
+        return ResponseEntity.ok(Map.of(
+            "content", userPage.getContent(),
+            "page", (userPage.getNumber() +1),
+            "size", userPage.getSize(),
+            "totalElements", userPage.getTotalElements(),
+            "totalPages", userPage.getTotalPages()
+            // "first", userPage.isFirst(),
+            // "last", userPage.isLast()
+        ));
+    }
 
      // Save a user
     @PostMapping
