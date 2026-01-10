@@ -1,11 +1,13 @@
 package com.nameismani.spring_boot_learning.config;
 
 public enum RoutePermission {
-    // ✅ PUBLIC ROUTES (No token needed)
+   // ✅ ONLY these are PUBLIC
     PUBLIC_AUTH("/api/auth/**", "ALL"),
     PUBLIC_POST_USERS("/api/users", "POST"),
     
-    // ✅ ADMIN ROUTES (Admin role ONLY)
+
+    
+    // Admin only
     ADMIN_DELETE("/api/users/**", "DELETE"),
     ADMIN_PUT("/api/users/**", "PUT"),
     ADMIN_GET_ALL("/api/users", "GET");

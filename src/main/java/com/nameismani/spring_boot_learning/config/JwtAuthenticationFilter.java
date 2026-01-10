@@ -54,6 +54,7 @@ protected void doFilterInternal(HttpServletRequest request,
     // ✅ Invalid token / user not found
     String token = authHeader.substring(7);
     UserEntity currentUser = authenticateToken(token);
+    System.out.print(currentUser.getId() + "asfdadf");
     if (currentUser == null) {
         ErrorResponseUtil.sendUnauthorized(response, "Invalid or expired token");
         return;
@@ -85,13 +86,6 @@ private UserEntity authenticateToken(String token) {
     }
 }
 
-// ✅ Helper: Send JSON error response
-private void sendError(HttpServletResponse response, int status, String message) throws IOException {
-    response.setStatus(status);
-    response.setContentType("application/json");
-    response.getWriter().write("{\"error\":\"" + message + "\"}");
-}
-
 private boolean isAdminRoute(String path, String method) {
     return getMatchingPermissions(path, method).stream()
         .anyMatch(p -> p.name().startsWith("ADMIN_"));
@@ -99,7 +93,7 @@ private boolean isAdminRoute(String path, String method) {
 
 private boolean isPublicRoute(String path, String method) {
     return getMatchingPermissions(path, method).stream()
-        .anyMatch(p -> !p.name().startsWith("ADMIN_"));
+         .anyMatch(p -> p.name().startsWith("PUBLIC_"));
 }
 
 private List<RoutePermission> getMatchingPermissions(String path, String method) {
