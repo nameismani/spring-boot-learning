@@ -1,11 +1,18 @@
 package com.nameismani.spring_boot_learning.entity;
 
+import java.util.Collection;
+import java.util.List;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
 
-public class UserEntity {
+public class UserEntity implements UserDetails {
     
         @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,7 +21,26 @@ public class UserEntity {
     private String name;
     private String email;
     private String password;
+    private String role = "USER"; // Default: USER
 
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
+    }
+
+
+    public String getUsername() {
+        return email;
+    }
+
+    // public boolean isAccountNonExpired() { return true; }
+
+    // public boolean isAccountNonLocked() { return true; }
+
+    // public boolean isCredentialsNonExpired() { return true; }
+
+    // public boolean isEnabled() { return true; }
+    
     public String getPassword() {
         return password;
     }
@@ -55,5 +81,14 @@ public class UserEntity {
     public void setEmail(String email) {
         this.email = email;
     }
+    public String getRole() {
+        return role;
+    }
+
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
 
 }

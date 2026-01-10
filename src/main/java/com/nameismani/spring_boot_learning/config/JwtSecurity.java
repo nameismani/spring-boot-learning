@@ -8,6 +8,8 @@ import javax.crypto.SecretKey;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.nameismani.spring_boot_learning.entity.UserEntity;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -26,9 +28,11 @@ public class JwtSecurity {
 
     // 🔹 Generate JWT
     public String generateToken(UserDetails userDetails) {
-
+          UserEntity user = (UserEntity) userDetails;
         return Jwts.builder()
                 .subject(userDetails.getUsername())
+                .claim("userId", user.getId())  // ✅ User ID
+                .claim("roles", user.getRole()) // ✅ Role
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(KEY)

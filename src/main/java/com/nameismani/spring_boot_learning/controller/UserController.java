@@ -32,8 +32,13 @@ public class UserController {
 
      // Save a user
     @PostMapping
-    public UserEntity saveUser(@RequestBody UserEntity user) {
-        return userService.saveUser(user);
+    public ResponseEntity<Map<String, Object>> saveUser(@RequestBody UserEntity user) {
+        if (userService.findByEmail(user.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", "Email already exists"));
+        }
+         UserEntity savedUser = userService.saveUser(user);
+        return ResponseEntity.ok(Map.of("user", savedUser));
     }
 
     // Get a user by ID

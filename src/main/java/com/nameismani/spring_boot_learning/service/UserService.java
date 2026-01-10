@@ -10,6 +10,7 @@ import com.nameismani.spring_boot_learning.exceptions.ResourceNotFoundException;
 import com.nameismani.spring_boot_learning.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service  
 public class UserService {
@@ -18,6 +19,11 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+      //NEW: Email check method
+    public Optional<UserEntity> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 
     // Get all users
     // public List<User> getAllUsers() {
