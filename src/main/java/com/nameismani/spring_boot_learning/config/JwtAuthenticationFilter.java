@@ -34,6 +34,15 @@ protected void doFilterInternal(HttpServletRequest request,
                               HttpServletResponse response, 
                               FilterChain filterChain)
         throws ServletException, IOException {
+
+              // ✅ HANDLE OPTIONS PREFLIGHT FIRST
+    if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+        response.setStatus(HttpServletResponse.SC_OK);
+        addCorsHeaders(response);
+        return;
+    }
+    
+    addCorsHeaders(response);  // ✅ Add CORS to ALL responses
     
     String path = request.getRequestURI();
     String method = request.getMethod();
@@ -100,6 +109,13 @@ private List<RoutePermission> getMatchingPermissions(String path, String method)
     return Arrays.stream(RoutePermission.values())
         .filter(p -> p.matches(path, method))
         .collect(Collectors.toList());
+}
+
+private void addCorsHeaders(HttpServletResponse response) {
+    response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+    response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, *");
+    response.setHeader("Access-Control-Max-Age", "3600");
 }
 
 }
